@@ -4,20 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Productos;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+
+
 
 class ProductosController extends Controller
 {
     /**
      * Display a listing of the resource.
-     */
-    public function index()
+**/
+    public function index(): View
     {
-        return response('Hello, World!');//
+        return view('index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
@@ -26,9 +27,15 @@ class ProductosController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'message' => 'required|string|max:255',
+        ]);
+ 
+        $request->user()->productos()->create($validated);
+ 
+        return redirect(route('productos.index'));
     }
 
     /**
